@@ -1,0 +1,5 @@
+@use 'src/app/shared/styles/animations'; // Importa as animações
+
+.button {
+    @extend animations.scale-up; // Aplica a classe .scale-up ao botão
+}
