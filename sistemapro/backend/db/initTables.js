@@ -7,6 +7,7 @@ const usuariosTable = `
     username VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     senha VARCHAR(255) NOT NULL,
+    area VARCHAR(100) NOT NULL, -- Campo área adicionado
     ativo TINYINT(1) DEFAULT 0,
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );

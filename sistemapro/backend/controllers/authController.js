@@ -5,21 +5,38 @@ const transporter = require('../config/email');
 
 // Função de registro
 exports.register = (req, res) => {
-  const { username, email, senha } = req.body;
+  const { username, email, senha, area } = req.body;
 
-  if (!username || !email || !senha) {
+  // Validação dos campos
+  if (!username || !email || !senha || !area) {
     return res.status(400).json({ error: 'Preencha todos os campos.' });
   }
 
+  console.log('Dados recebidos no backend:', req.body);
+
   // Hash da senha
   bcrypt.hash(senha, 10, (err, hashedPassword) => {
-    if (err) return res.status(500).json({ error: 'Erro ao hashear a senha.' });
+    if (err) {
+      console.error('Erro ao hashear a senha:', err);
+      return res.status(500).json({ error: 'Erro interno ao processar senha.' });
+    }
 
-    // Insere o usuário com status "inativo"
-    const query = 'INSERT INTO usuarios (username, email, senha, ativo) VALUES (?, ?, ?, 0)';
-    connection.query(query, [username, email, hashedPassword], (error, results) => {
-      if (error) return res.status(500).json({ error: 'Erro ao registrar o usuário.' });
+    const query = 'INSERT INTO usuarios (username, email, senha, area, ativo) VALUES (?, ?, ?, ?, 0)';
+    connection.query(query, [username, email, hashedPassword, area], (error, results) => {
+      if (error) {
+        // Trata erro de duplicidade
+        if (error.code === 'ER_DUP_ENTRY') {
+          console.error('Erro de duplicidade:', error.sqlMessage);
+          return res.status(409).json({ error: 'O email já está registrado.' });
+        }
 
+        // Trata outros erros
+        console.error('Erro na query de registro:', error);
+        return res.status(500).json({ error: 'Erro ao registrar o usuário.' });
+      }
+
+      console.log('Resultados da query:', results);
+      res.status(201).json({ message: 'Usuário registrado com sucesso!' });
       const userId = results.insertId;
 
       // Token de ativação exclusivo

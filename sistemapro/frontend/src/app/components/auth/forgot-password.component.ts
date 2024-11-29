@@ -9,19 +9,18 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth.service';
 
-
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
   imports: [
-    MatProgressSpinnerModule,
     CommonModule,
+    ReactiveFormsModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    ReactiveFormsModule,
-    MatSnackBarModule
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
   ],
   template: `
     <div class="forgot-password-container">
@@ -41,9 +40,7 @@ import { AuthService } from '../../services/auth.service';
               <span *ngIf="isLoading">
                 <mat-spinner diameter="20"></mat-spinner>
               </span>
-              <span *ngIf="!isLoading">
-                Enviar Link de Redefinição
-              </span>
+              <span *ngIf="!isLoading">Enviar Link de Redefinição</span>
             </button>
             <button mat-button (click)="onCancel()">Cancelar</button>
           </div>
@@ -79,28 +76,25 @@ export class ForgotPasswordComponent {
     private authService: AuthService
   ) {
     this.forgotPasswordForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]]
+      email: ['', [Validators.required, Validators.email]],
     });
   }
 
   onSubmit() {
     if (this.forgotPasswordForm.valid) {
       this.isLoading = true;
-      this.authService.forgotPassword(this.forgotPasswordForm.value.email).subscribe(
-        (response) => {
+      this.authService.requestPasswordRecovery(this.forgotPasswordForm.value.email).subscribe({
+        next: () => {
           this.isLoading = false;
-          this.snackBar.open('Email de redefinição enviado!', 'Fechar', {
-            duration: 3000
-          });
+          this.snackBar.open('Email de redefinição enviado!', 'Fechar', { duration: 3000 });
           this.dialogRef.close();
         },
-        (error) => {
+        error: (error: { error: { message: string; }; }) => {
           this.isLoading = false;
-          this.snackBar.open('Erro ao enviar email: ' + error.message, 'Fechar', {
-            duration: 5000,
-          });
-        }
-      );
+          const errorMessage = error?.error?.message || 'Erro ao enviar o email.';
+          this.snackBar.open(errorMessage, 'Fechar', { duration: 5000 });
+        },
+      });
     }
   }
 

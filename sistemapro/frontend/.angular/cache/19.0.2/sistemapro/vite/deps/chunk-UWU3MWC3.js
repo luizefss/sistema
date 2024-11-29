@@ -2,12 +2,12 @@ import {
   ScrollDispatcher,
   ScrollingModule,
   ViewportRuler
-} from "./chunk-4RONQHPS.js";
+} from "./chunk-FPCLC3LV.js";
 import {
   DomPortalOutlet,
   PortalModule,
   TemplatePortal
-} from "./chunk-I7TS557S.js";
+} from "./chunk-SQA33J75.js";
 import {
   BidiModule,
   Directionality,
@@ -21,11 +21,11 @@ import {
   coerceCssPixelValue,
   hasModifierKey,
   supportsScrollBehavior
-} from "./chunk-CXWMWRH4.js";
+} from "./chunk-5BP233LV.js";
 import {
   DOCUMENT,
   Location
-} from "./chunk-NIC6FLW6.js";
+} from "./chunk-CC6APLZU.js";
 import {
   ANIMATION_MODULE_TYPE,
   ApplicationRef,
@@ -59,17 +59,19 @@ import {
   ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵgetInheritedFactory
-} from "./chunk-WCEUNNVR.js";
+} from "./chunk-43IA7UDK.js";
+import {
+  merge
+} from "./chunk-LBBSG2YE.js";
 import {
   Subject,
   Subscription,
   __spreadProps,
   __spreadValues,
   filter,
-  merge,
   takeUntil,
   takeWhile
-} from "./chunk-5TID76VL.js";
+} from "./chunk-NGNUV6BG.js";
 
 // node_modules/@angular/cdk/fesm2022/overlay.mjs
 var scrollBehaviorSupported = supportsScrollBehavior();
@@ -2901,4 +2903,4 @@ export {
   CdkConnectedOverlay,
   OverlayModule
 };
-//# sourceMappingURL=chunk-532D3AWU.js.map
+//# sourceMappingURL=chunk-UWU3MWC3.js.map

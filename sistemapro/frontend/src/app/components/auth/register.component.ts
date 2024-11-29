@@ -1,14 +1,16 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSelectModule } from '@angular/material/select';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
-import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { AuthService } from '../../services/auth.service';
+
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -140,9 +142,16 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
       </mat-dialog-actions>
 
       <div class="login-link">
-        Já tem uma conta? 
-        <a (click)="login()">Fazer login</a>
-      </div>
+  Já tem uma conta? 
+  <button
+    mat-button
+    (click)="login()"
+    (keydown.enter)="login()"
+    class="login-button"
+  >
+    Fazer login
+  </button>
+</div>
     </div>
   `,
   styles: [`
@@ -207,7 +216,8 @@ export class RegisterComponent {
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<RegisterComponent>,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthService
   ) {
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
@@ -230,19 +240,48 @@ export class RegisterComponent {
     }
   }
 
-  onSubmit() {
-    if (this.registerForm.valid) {
-      this.isLoading = true;
-      // Aqui você pode integrar com seu backend para registrar o usuário
-      setTimeout(() => {
+  // Método onSubmit atualizado
+ onSubmit(): void {
+  if (this.registerForm.valid) {
+    this.isLoading = true;
+
+    const registerData = {
+      name: this.registerForm.value.name,
+      email: this.registerForm.value.email,
+      password: this.registerForm.value.password,
+      area: this.registerForm.value.area
+    };
+    console.log('Dados para registro:', registerData); // Debug no console
+
+             
+    this.authService.register(registerData).subscribe({
+      next: (response) => {
+        console.log('Resposta do backend:', response); // Debug no console
         this.isLoading = false;
-        this.dialogRef.close(this.registerForm.value);
-        this.snackBar.open('Conta criada com sucesso! Verifique seu email.', 'Fechar', {
+        this.snackBar.open(
+          'Conta criada com sucesso! Verifique seu email para ativar sua conta.',
+          'Fechar',
+          { duration: 5000 }
+        );
+          this.dialogRef.close();
+                },
+          error: (error) => {
+        console.error('Erro no registro:', error); // Debug no console
+        this.isLoading = false;
+        const errorMessage = error.error?.error || 'Erro ao registrar o usuário.';
+        this.snackBar.open(errorMessage, 'Fechar', {
           duration: 5000
         });
-      }, 1500);
-    }
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
+
+    });
+  console.log('Dados para registro:', registerData);
+
   }
+}
 
   onCancel() {
     this.dialogRef.close();

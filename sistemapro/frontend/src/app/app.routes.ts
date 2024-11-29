@@ -1,4 +1,3 @@
-// src/app/app.routes.ts
 import { Routes } from '@angular/router';
 import HomeComponent from './components/home/home.component';
 
@@ -6,5 +5,10 @@ export const routes: Routes = [
   {
     path: '',
     component: HomeComponent
+  },
+  // Add a wildcard route to handle undefined routes
+  {
+    path: '**',
+    redirectTo: ''
   }
 ];
