@@ -32,7 +32,7 @@ import UseCasesComponent from "./use-cases/use-cases.component";
     TestimonialsComponent,
     UseCasesComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
   ],
   template: `
     <div class="home-layout">
@@ -48,9 +48,8 @@ import UseCasesComponent from "./use-cases/use-cases.component";
       <app-pricing />
       <app-testimonials />
       <app-faq />
-       <app-footer></app-footer>
+      <app-footer></app-footer>
     </div>
-
   `,
 })
 export default class HomeComponent {}

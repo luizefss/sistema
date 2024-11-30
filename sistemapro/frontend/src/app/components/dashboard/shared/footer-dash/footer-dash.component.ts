@@ -21,13 +21,16 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   `,
   styles: [
     `
-      .footer-dashboard {
+      :host {
+        display: block;
+        height: 56px; /* Altura fixa correspondente */
+      }
+
+      mat-toolbar {
+        height: 100%;
         background: var(--mat-toolbar-container-background-color);
         color: var(--mat-toolbar-container-text-color);
-        padding: 8px 16px;
-        position: relative;
-        bottom: 0;
-        width: 100%;
+        padding: 0 16px;
       }
 
       .footer-content {

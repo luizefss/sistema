@@ -37,11 +37,9 @@ import { TaxConfigComponent } from './dialogs/tax-config/tax-config.component';
   ],
   template: `
     <div class="dashboard-layout">
-      <!-- Sidebar -->
       <app-sidebar></app-sidebar>
 
       <div class="main-content">
-        <!-- Header -->
         <app-header-dash></app-header-dash>
 
         <!-- Main Content -->
@@ -112,8 +110,8 @@ import { TaxConfigComponent } from './dialogs/tax-config/tax-config.component';
             </mat-card>
           </div>
         </div>
-        <app-footer-dash />
       </div>
+      <app-footer-dash></app-footer-dash>
     </div>
   `,
   styles: [
@@ -121,20 +119,31 @@ import { TaxConfigComponent } from './dialogs/tax-config/tax-config.component';
       .dashboard-layout {
         display: flex;
         height: 100vh;
-        background-color: var(--mat-app-background-color);
+        overflow: hidden;
       }
 
       .main-content {
         flex: 1;
-        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        margin-bottom: 56px; /* Isso alinha com a área da assinatura da sidebar */
       }
 
       .content-area {
+        flex: 1;
         padding: 24px;
-        max-width: 1400px;
-        margin: 0 auto;
+        overflow-y: auto;
+        padding-bottom: 64px;
       }
 
+      app-footer-dash {
+      position: fixed;
+      bottom: 0;
+      left: 260px; // Largura da sidebar
+      right: 0;
+      z-index: 1;
+      }
       .stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
