@@ -26,54 +26,85 @@ import { MatToolbarModule } from "@angular/material/toolbar";
   ],
   template: `
     <mat-toolbar class="header-dashboard">
-      <!-- Botão de toggle do menu lateral -->
       <button mat-icon-button (click)="toggleSidebar.emit()">
         <mat-icon>menu</mat-icon>
       </button>
 
-      <!-- Título dinâmico da página -->
-      <span class="page-title">{{pageTitle}}</span>
+      <span class="page-title">
+        <mat-icon class="title-icon">dashboard</mat-icon>
+        Dashboard
+      </span>
 
       <span class="spacer"></span>
 
-      <!-- Área de ações do usuário -->
-      <div class="user-actions">
+      <!-- Área de Notificações e Perfil -->
+      <div class="header-actions">
         <!-- Notificações -->
-        <button mat-icon-button [matMenuTriggerFor]="notificationsMenu">
-          <mat-icon [matBadge]="notificationCount" matBadgeColor="warn">
-            notifications
-          </mat-icon>
+        <button
+          mat-icon-button
+          [matMenuTriggerFor]="notifyMenu"
+          class="notify-button"
+        >
+          <mat-icon [matBadge]="notificationCount" matBadgeColor="warn"
+            >notifications</mat-icon
+          >
         </button>
 
         <!-- Menu de Notificações -->
-        <mat-menu #notificationsMenu="matMenu" class="notifications-menu">
-          <div class="notification-item" *ngFor="let notification of notifications">
-            <mat-icon>{{notification.icon}}</mat-icon>
-            <div class="notification-content">
-              <strong>{{notification.title}}</strong>
-              <p>{{notification.message}}</p>
+        <mat-menu #notifyMenu="matMenu" class="notification-menu">
+          <div class="notification-header">
+            <h4>Notificações</h4>
+            <button mat-button color="primary">Marcar todas como lidas</button>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="notification-list">
+            <div
+              *ngFor="let notification of notifications"
+              class="notification-item"
+            >
+              <mat-icon [color]="notification.type || 'default'">{{
+                notification.icon
+              }}</mat-icon>
+
+              <div class="notification-content">
+                <strong>{{ notification.title }}</strong>
+                <p>{{ notification.message }}</p>
+                <span class="notification-time">{{
+                  notification.time || 'Tempo desconhecido'
+                }}</span>
+              </div>
             </div>
           </div>
         </mat-menu>
 
         <!-- Perfil do Usuário -->
-        <button mat-button [matMenuTriggerFor]="profileMenu" class="profile-button">
-          <div class="user-avatar">
-            <!-- Iniciais do usuário se não houver avatar -->
-            <span *ngIf="!userAvatar">{{userInitials}}</span>
-            <img *ngIf="userAvatar" [src]="userAvatar" [alt]="userName">
+        <button
+          mat-button
+          [matMenuTriggerFor]="profileMenu"
+          class="profile-button"
+        >
+          <div class="avatar-container">
+            <div class="avatar">LF</div>
           </div>
-          <span class="user-name">{{userName}}</span>
+          <span class="username">Luiz Ferraz</span>
           <mat-icon>arrow_drop_down</mat-icon>
         </button>
 
         <!-- Menu do Perfil -->
-        <mat-menu #profileMenu="matMenu">
-          <button mat-menu-item routerLink="/profile">
+        <mat-menu #profileMenu="matMenu" class="profile-menu">
+          <div class="profile-header">
+            <div class="avatar">LF</div>
+            <div class="user-info">
+              <strong>Luiz Ferraz</strong>
+              <small>luizemail.com</small>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+          <button mat-menu-item>
             <mat-icon>person</mat-icon>
             <span>Meu Perfil</span>
           </button>
-          <button mat-menu-item routerLink="/settings">
+          <button mat-menu-item>
             <mat-icon>settings</mat-icon>
             <span>Configurações</span>
           </button>
@@ -86,69 +117,139 @@ import { MatToolbarModule } from "@angular/material/toolbar";
       </div>
     </mat-toolbar>
   `,
-  styles: [`
-    .header-dashboard {
-      border-bottom: 1px solid var(--mat-divider-color);
-      background: var(--mat-toolbar-container-background-color);
-      padding: 0 16px;
-    }
-
-    .spacer {
-      flex: 1 1 auto;
-    }
-
-    .user-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .profile-button {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 8px;
-      border-radius: 24px;
-
-      &:hover {
-        background: var(--mat-toolbar-container-text-color-lighter);
+  styles: [
+    `
+      .header-dashboard {
+        background: #1a1c23;
+        color: white;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 0 16px;
+        height: 64px;
       }
-    }
 
-    .user-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--mat-primary-color);
-      color: white;
-      font-size: 14px;
+      .page-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 20px;
+        margin-left: 8px;
 
-      img {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        object-fit: cover;
-      }
-    }
-
-    .notification-item {
-      display: flex;
-      padding: 8px 16px;
-      gap: 12px;
-      align-items: start;
-
-      .notification-content {
-        p {
-          margin: 4px 0 0;
-          font-size: 14px;
-          color: var(--mat-gray-600);
+        .title-icon {
+          color: #0284c7;
         }
       }
-    }
-  `]
+
+      .spacer {
+        flex: 1;
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .notify-button {
+        ::ng-deep .mat-badge-content {
+          background: #ef4444;
+        }
+      }
+
+      .profile-button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 8px;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.05);
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+      }
+
+      .avatar-container {
+        .avatar {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          background: #0284c7;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 500;
+        }
+      }
+
+      .username {
+        font-size: 14px;
+      }
+
+      // Estilos para os menus
+      ::ng-deep {
+        .notification-menu {
+          min-width: 320px;
+          max-height: 400px;
+          overflow-y: auto;
+        }
+
+        .notification-header {
+          padding: 16px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          h4 {
+            margin: 0;
+            font-weight: 500;
+          }
+        }
+
+        .notification-item {
+          padding: 12px 16px;
+          display: flex;
+          gap: 12px;
+          cursor: pointer;
+
+          &:hover {
+            background: rgba(0, 0, 0, 0.04);
+          }
+
+          .notification-content {
+            p {
+              margin: 4px 0;
+              color: #64748b;
+            }
+
+            .notification-time {
+              font-size: 12px;
+              color: #94a3b8;
+            }
+          }
+        }
+
+        .profile-menu {
+          min-width: 240px;
+        }
+
+        .profile-header {
+          padding: 16px;
+          display: flex;
+          gap: 12px;
+          align-items: center;
+
+          .user-info {
+            display: flex;
+            flex-direction: column;
+
+            small {
+              color: #64748b;
+            }
+          }
+        }
+      }
+    `,
+  ],
 })
 export class HeaderDashComponent {
   @Output() toggleSidebar = new EventEmitter<void>();
@@ -164,9 +265,17 @@ export class HeaderDashComponent {
     {
       icon: 'info',
       title: 'Atualização do Sistema',
-      message: 'Nova versão disponível'
-    }
-    // Mais notificações...
+      message: 'Nova versão disponível',
+      type: 'info', // Adicionado
+      time: '5 minutos atrás', // Adicionado
+    },
+    {
+      icon: 'warning',
+      title: 'Manutenção Programada',
+      message: 'O sistema estará fora do ar às 2h',
+      type: 'warn', // Adicionado
+      time: '1 hora atrás', // Adicionado
+    },
   ];
 
   logout(): void {

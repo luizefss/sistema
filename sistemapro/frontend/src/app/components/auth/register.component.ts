@@ -29,16 +29,16 @@ import { AuthService } from '../../services/auth.service';
   template: `
     <div class="register-container">
       <h2 mat-dialog-title>Criar Conta</h2>
-      
+
       <mat-dialog-content>
         <form [formGroup]="registerForm" class="register-form">
           <!-- Nome -->
           <mat-form-field appearance="outline">
             <mat-label>Nome completo</mat-label>
             <mat-icon matPrefix>person</mat-icon>
-            <input 
-              matInput 
-              formControlName="name" 
+            <input
+              matInput
+              formControlName="name"
               placeholder="Seu nome completo"
             >
             <mat-error *ngIf="registerForm.get('name')?.hasError('required') && registerForm.get('name')?.touched">
@@ -50,10 +50,10 @@ import { AuthService } from '../../services/auth.service';
           <mat-form-field appearance="outline">
             <mat-label>Email profissional</mat-label>
             <mat-icon matPrefix>email</mat-icon>
-            <input 
-              matInput 
-              formControlName="email" 
-              type="email" 
+            <input
+              matInput
+              formControlName="email"
+              type="email"
               placeholder="seu@escritorio.com"
             >
             <mat-error *ngIf="registerForm.get('email')?.hasError('required') && registerForm.get('email')?.touched">
@@ -81,13 +81,13 @@ import { AuthService } from '../../services/auth.service';
           <mat-form-field appearance="outline">
             <mat-label>Senha</mat-label>
             <mat-icon matPrefix>lock</mat-icon>
-            <input 
-              matInput 
+            <input
+              matInput
               [type]="hidePassword ? 'password' : 'text'"
               formControlName="password"
             >
-            <mat-icon 
-              matSuffix 
+            <mat-icon
+              matSuffix
               (click)="hidePassword = !hidePassword"
               style="cursor: pointer"
             >
@@ -105,8 +105,8 @@ import { AuthService } from '../../services/auth.service';
           <mat-form-field appearance="outline">
             <mat-label>Confirmar Senha</mat-label>
             <mat-icon matPrefix>lock</mat-icon>
-            <input 
-              matInput 
+            <input
+              matInput
               [type]="hidePassword ? 'password' : 'text'"
               formControlName="confirmPassword"
             >
@@ -117,8 +117,8 @@ import { AuthService } from '../../services/auth.service';
 
           <!-- Termos -->
           <div class="terms">
-            Ao criar uma conta, você concorda com nossos 
-            <a href="/termos" target="_blank">Termos de Uso</a> e 
+            Ao criar uma conta, você concorda com nossos
+            <a href="/termos" target="_blank">Termos de Uso</a> e
             <a href="/privacidade" target="_blank">Política de Privacidade</a>
           </div>
         </form>
@@ -126,8 +126,8 @@ import { AuthService } from '../../services/auth.service';
 
       <mat-dialog-actions align="end">
         <button mat-button (click)="onCancel()">Cancelar</button>
-        <button 
-          mat-raised-button 
+        <button
+          mat-raised-button
           color="primary"
           (click)="onSubmit()"
           [disabled]="registerForm.invalid || isLoading"
@@ -142,7 +142,7 @@ import { AuthService } from '../../services/auth.service';
       </mat-dialog-actions>
 
       <div class="login-link">
-  Já tem uma conta? 
+  Já tem uma conta?
   <button
     mat-button
     (click)="login()"
@@ -172,12 +172,12 @@ import { AuthService } from '../../services/auth.service';
       color: #666;
       text-align: center;
     }
-    
+
     .terms a {
       color: #1976d2;
       text-decoration: none;
     }
-    
+
     .terms a:hover {
       text-decoration: underline;
     }
@@ -193,7 +193,7 @@ import { AuthService } from '../../services/auth.service';
       cursor: pointer;
       text-decoration: none;
     }
-    
+
     .login-link a:hover {
       text-decoration: underline;
     }
@@ -253,7 +253,7 @@ export class RegisterComponent {
     };
     console.log('Dados para registro:', registerData); // Debug no console
 
-             
+
     this.authService.register(registerData).subscribe({
       next: (response) => {
         console.log('Resposta do backend:', response); // Debug no console

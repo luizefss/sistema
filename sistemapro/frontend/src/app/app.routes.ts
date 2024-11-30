@@ -10,6 +10,9 @@ import FeaturesComponent from './components/home/features/features.component';
 import HomeComponent from './components/home/home.component';
 import PricingComponent from './components/home/pricing/pricing.component';
 
+// Adicione o caminho para o componente de ativação de conta
+import ActivateAccountComponent from './components/auth/activate-account.component';
+
 export const routes: Routes = [
   // Rotas públicas (área da home)
   {
@@ -21,6 +24,12 @@ export const routes: Routes = [
       { path: 'features', component: FeaturesComponent },
       // ... outras páginas públicas
     ],
+  },
+
+  // Rota para ativação de conta
+  {
+    path: 'activate-account',
+    component: ActivateAccountComponent,
   },
 
   // Rotas da dashboard (área administrativa)
