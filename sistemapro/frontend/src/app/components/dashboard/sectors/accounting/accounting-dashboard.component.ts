@@ -138,11 +138,11 @@ import { TaxConfigComponent } from './dialogs/tax-config/tax-config.component';
       }
 
       app-footer-dash {
-      position: fixed;
-      bottom: 0;
-      left: 260px; // Largura da sidebar
-      right: 0;
-      z-index: 1;
+        position: fixed;
+        bottom: 0;
+        left: 260px; // Largura da sidebar
+        right: 0;
+        z-index: 1;
       }
       .stats-grid {
         display: grid;
@@ -241,6 +241,16 @@ import { TaxConfigComponent } from './dialogs/tax-config/tax-config.component';
           grid-template-columns: 1fr;
         }
       }
+      @media (max-width: 768px) {
+        .tools-grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+
+        .tool-card {
+          padding: 16px;
+        }
+      }
     `,
   ],
 })
@@ -280,6 +290,10 @@ export class AccountingDashboardComponent {
     dialogRef?.afterClosed().subscribe((result) => {
       if (result) {
         this.snackBar.open('Configurações salvas com sucesso!', 'Fechar', {
+          duration: 3000,
+        });
+      } else {
+        this.snackBar.open('Simulador fechado sem alterações.', 'Fechar', {
           duration: 3000,
         });
       }

@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -100,15 +100,17 @@ import { ForgotPasswordComponent } from './forgot-password.component';
               mat-raised-button
               color="primary"
               type="submit"
-              [disabled]="isLoading"
+              [disabled]="loginForm.invalid || isLoading"
             >
+              <span *ngIf="isLoading">
+                <mat-spinner diameter="20"></mat-spinner>
+              </span>
               <span *ngIf="!isLoading">Entrar</span>
-              <span *ngIf="isLoading"
-                ><mat-spinner diameter="20"></mat-spinner
-              ></span>
             </button>
 
-            <button mat-button (click)="onCancel()">Cancelar</button>
+            <button mat-button type="button" (click)="onCancel()">
+              Cancelar
+            </button>
           </div>
         </form>
       </mat-dialog-content>
@@ -195,7 +197,8 @@ export class LoginComponent {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private authService: AuthService,
-    private router: Router // Import do Router
+    private router: Router, // Import do Router
+    private dialogRef: MatDialogRef<LoginComponent>
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -204,29 +207,51 @@ export class LoginComponent {
     });
   }
   onSubmit() {
-    if (this.isLoading) return; // Impede requisições concorrentes
-    this.isLoading = true;
-
     if (this.loginForm.valid) {
+      this.isLoading = true;
+
       this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
           this.isLoading = false;
           this.snackBar.open('Login realizado com sucesso!', 'Fechar', {
             duration: 3000,
           });
-          this.router.navigate([`/${response.area}/dashboard`]); // Redireciona para a dashboard
+
+          const userArea = response?.user?.area || 'dashboard';
+
+          // Redireciona o usuário para a dashboard correspondente
+          switch (userArea) {
+            case 'contabilidade':
+              this.router.navigate(['/accounting/dashboard']);
+              break;
+            case 'engenharia':
+              this.router.navigate(['/engineering/dashboard']);
+              break;
+            case 'arquitetura':
+              this.router.navigate(['/architecture/dashboard']);
+              break;
+            default:
+              this.router.navigate(['/dashboard']);
+          }
+
+          // Fecha o modal de login após redirecionar
+          this.dialogRef.close();
         },
-        error: (err) => {
+        error: (error) => {
           this.isLoading = false;
           this.snackBar.open(
-            'Erro ao fazer login: ' + err.error.message,
+            'Erro ao fazer login: ' +
+              (error.error.message || 'usuario ou senha inválida'),
             'Fechar',
-            { duration: 5000 }
+            {
+              duration: 5000,
+            }
           );
         },
       });
     }
   }
+
   onCancel() {
     this.dialog.closeAll();
   }
